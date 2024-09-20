@@ -24,7 +24,7 @@ df_reshaped = pd.read_csv('penduduk-indonesia-2018-2023.csv')
 #######################
 # Sidebar
 with st.sidebar:
-    st.title('✅ Data Penduduk')
+    st.title('🌞 Data Penduduk')
     
     year_list = list(df_reshaped.year.unique())[::-1]
     
