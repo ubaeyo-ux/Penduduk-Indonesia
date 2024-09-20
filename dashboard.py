@@ -101,6 +101,13 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
         )
     )
     choropleth_map.update_geos(fitbounds="locations", visible=True)
+    choropleth.update_layout(
+    template='plotly_white',
+    plot_bgcolor='rgba(255, 255, 255, 0)',
+    paper_bgcolor='rgba(200, 200, 200, 0)',
+    margin=dict(l=0, r=0, t=0, b=0),
+    height=350
+    )
     return choropleth_map
 
 
