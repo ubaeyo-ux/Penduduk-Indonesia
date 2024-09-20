@@ -95,12 +95,12 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
             locations=df["Column"],  # Spatial coordinates
             featureidkey="properties.Propinsi",
             z=df["Columnnext"],  # Data to be color-coded
-            colorscale=input_color_theme,
+            color_continuous_scale=input_color_theme,
             range_color=(0, max(df_selected_year.population)),
             labels={'population':'Population'}
         )
     )
-    choropleth_map.update_geos(fitbounds="locations", visible=True)
+    choropleth_map.update_geos(fitbounds="locations", visible=False)
     choropleth.update_layout(
     template='plotly_white',
     plot_bgcolor='rgba(255, 255, 255, 0)',
