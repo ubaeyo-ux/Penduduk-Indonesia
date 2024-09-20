@@ -24,16 +24,16 @@ df_reshaped = pd.read_csv('penduduk-indonesia-2018-2023.csv')
 #######################
 # Sidebar
 with st.sidebar:
-    st.title('✅ Data Jumlah Penduduk Indonesia')
+    st.title('✅ Data Penduduk')
     
     year_list = list(df_reshaped.year.unique())[::-1]
     
-    selected_year = st.selectbox('Select a year', year_list)
+    selected_year = st.selectbox('Pilih Tahun', year_list)
     df_selected_year = df_reshaped[df_reshaped.year == selected_year]
     df_selected_year_sorted = df_selected_year.sort_values(by="population", ascending=False)
 
     color_theme_list = ['blues', 'cividis', 'greens', 'inferno', 'magma', 'plasma', 'reds', 'rainbow', 'turbo', 'viridis']
-    selected_color_theme = st.selectbox('Select a color theme', color_theme_list)
+    selected_color_theme = st.selectbox('Pilih Tema Warna', color_theme_list)
 
 
 #######################
@@ -42,7 +42,7 @@ with st.sidebar:
 # Heatmap
 def make_heatmap(input_df, input_y, input_x, input_color, input_color_theme):
     heatmap = alt.Chart(input_df).mark_rect().encode(
-            y=alt.Y(f'{input_y}:O', axis=alt.Axis(title="Year", titleFontSize=18, titlePadding=15, titleFontWeight=900, labelAngle=0)),
+            y=alt.Y(f'{input_y}:O', axis=alt.Axis(title="Tahun", titleFontSize=18, titlePadding=15, titleFontWeight=900, labelAngle=0)),
             x=alt.X(f'{input_x}:O', axis=alt.Axis(title="", titleFontSize=18, titlePadding=15, titleFontWeight=900)),
             color=alt.Color(f'max({input_color}):Q',
                              legend=None,
@@ -63,7 +63,7 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
                                color_continuous_scale=input_color_theme,
                                range_color=(0, max(df_selected_year.population)),
                                scope="usa",
-                               labels={'population':'Population'}
+                               labels={'population':'Jumlah'}
                               )
     choropleth.update_layout(
         template='plotly_dark',
@@ -139,11 +139,11 @@ def calculate_population_difference(input_df, input_year):
 col = st.columns((1.5, 4.5, 2), gap='medium')
 
 with col[0]:
-    st.markdown('#### Gains/Losses')
+    st.markdown('#### Naik/Turun')
 
     df_population_difference_sorted = calculate_population_difference(df_reshaped, selected_year)
 
-    if selected_year > 2010:
+    if selected_year > 2018:
         first_state_name = df_population_difference_sorted.states.iloc[0]
         first_state_population = format_number(df_population_difference_sorted.population.iloc[0])
         first_state_delta = format_number(df_population_difference_sorted.population_difference.iloc[0])
@@ -153,7 +153,7 @@ with col[0]:
         first_state_delta = ''
     st.metric(label=first_state_name, value=first_state_population, delta=first_state_delta)
 
-    if selected_year > 2010:
+    if selected_year > 2018:
         last_state_name = df_population_difference_sorted.states.iloc[-1]
         last_state_population = format_number(df_population_difference_sorted.population.iloc[-1])   
         last_state_delta = format_number(df_population_difference_sorted.population_difference.iloc[-1])   
@@ -164,9 +164,9 @@ with col[0]:
     st.metric(label=last_state_name, value=last_state_population, delta=last_state_delta)
 
     
-    st.markdown('#### States Migration')
+    st.markdown('#### Migrasi')
 
-    if selected_year > 2010:
+    if selected_year > 2018:
         # Filter states with population difference > 50000
         # df_greater_50000 = df_population_difference_sorted[df_population_difference_sorted.population_difference_absolute > 50000]
         df_greater_50000 = df_population_difference_sorted[df_population_difference_sorted.population_difference > 50000]
@@ -175,23 +175,23 @@ with col[0]:
         # % of States with population difference > 50000
         states_migration_greater = round((len(df_greater_50000)/df_population_difference_sorted.states.nunique())*100)
         states_migration_less = round((len(df_less_50000)/df_population_difference_sorted.states.nunique())*100)
-        donut_chart_greater = make_donut(states_migration_greater, 'Inbound Migration', 'green')
-        donut_chart_less = make_donut(states_migration_less, 'Outbound Migration', 'red')
+        donut_chart_greater = make_donut(states_migration_greater, 'Migrasi Masuk', 'green')
+        donut_chart_less = make_donut(states_migration_less, 'Migrasi Keluar', 'red')
     else:
         states_migration_greater = 0
         states_migration_less = 0
-        donut_chart_greater = make_donut(states_migration_greater, 'Inbound Migration', 'green')
-        donut_chart_less = make_donut(states_migration_less, 'Outbound Migration', 'red')
+        donut_chart_greater = make_donut(states_migration_greater, 'Migrasi Masuk', 'green')
+        donut_chart_less = make_donut(states_migration_less, 'Migrasi Keluar', 'red')
 
     migrations_col = st.columns((0.2, 1, 0.2))
     with migrations_col[1]:
-        st.write('Inbound')
+        st.write('Masuk')
         st.altair_chart(donut_chart_greater)
-        st.write('Outbound')
+        st.write('Keluar')
         st.altair_chart(donut_chart_less)
 
 with col[1]:
-    st.markdown('#### Total Population')
+    st.markdown('#### Jumlah')
     
     choropleth = make_choropleth(df_selected_year, 'states_code', 'population', selected_color_theme)
     st.plotly_chart(choropleth, use_container_width=True)
@@ -201,7 +201,7 @@ with col[1]:
     
 
 with col[2]:
-    st.markdown('#### Top States')
+    st.markdown('#### Provinsi')
 
     st.dataframe(df_selected_year_sorted,
                  column_order=("states", "population"),
@@ -221,7 +221,7 @@ with col[2]:
     
     with st.expander('About', expanded=True):
         st.write('''
-            - Data: [U.S. Census Bureau](https://www.census.gov/data/datasets/time-series/demo/popest/2010s-state-total.html).
+            - Data: [BPS Indonesia](https://sulut.bps.go.id/indicator/12/958/2/jumlah-penduduk-menurut-provinsi-di-indonesia.html).
             - :orange[**Gains/Losses**]: states with high inbound/ outbound migration for selected year
             - :orange[**States Migration**]: percentage of states with annual inbound/ outbound migration > 50,000
             ''')
