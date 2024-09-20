@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import plotly.express as px
+import plotly.graph_objects as go
 
 #######################
 # Page configuration
@@ -73,6 +74,32 @@ def make_heatmap(input_df, input_y, input_x, input_color, input_color_theme):
 #        height=350
 #    )
 #    return choropleth
+# Choropleth map
+
+def make_choropleth(input_df, input_id, input_column, input_color_theme):
+    # Get Indonesia geojson data
+    geojson = requests.get(
+        "https://raw.githubusercontent.com/superpikar/indonesia-geojson/master/indonesia-province-simple.json"
+    ).json()
+
+    # dataframe with columns referenced in question
+    df = pd.DataFrame(
+    {"Column": pd.json_normalize(geojson["features"])["properties.Propinsi"]}
+    ).assign(Columnnext=lambda d: d["Column"].str.len())
+
+    # Plot choropleth map
+    choropleth_map = go.Figure(
+        data=go.Choropleth(
+            geojson=geojson,
+            locations=df["Column"],  # Spatial coordinates
+            featureidkey="properties.Propinsi",
+            z=df["Columnnext"],  # Data to be color-coded
+            colorscale=input_color_theme,
+            colorbar_title=input_id,
+        )
+    )
+    choropleth_map.update_geos(fitbounds="locations", visible=True)
+    return choropleth_map
 
 
 # Donut chart
@@ -193,8 +220,8 @@ with col[0]:
 with col[1]:
     st.markdown('#### Jumlah')
     
-#    choropleth = make_choropleth(df_selected_year, 'states_code', 'population', selected_color_theme)
-#    st.plotly_chart(choropleth, use_container_width=True)
+    choropleth = make_choropleth(df_selected_year, 'states_code', 'population', selected_color_theme)
+    st.plotly_chart(choropleth, use_container_width=True)
     
     heatmap = make_heatmap(df_reshaped, 'year', 'states', 'population', selected_color_theme)
     st.altair_chart(heatmap, use_container_width=True)
