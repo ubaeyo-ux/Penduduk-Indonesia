@@ -100,7 +100,7 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
             labels={'population':'Population'}
         )
     )
-    choropleth_map.update_geos(fitbounds="locations", visible=True)
+    choropleth_map.update_geos(fitbounds="locations", visible=False)
     return choropleth_map
 
 
