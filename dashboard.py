@@ -222,6 +222,6 @@ with col[2]:
     with st.expander('About', expanded=True):
         st.write('''
             - Data: [BPS Indonesia](https://sulut.bps.go.id/indicator/12/958/2/jumlah-penduduk-menurut-provinsi-di-indonesia.html).
-            - :orange[**Gains/Losses**]: states with high inbound/ outbound migration for selected year
-            - :orange[**States Migration**]: percentage of states with annual inbound/ outbound migration > 50,000
+            - :orange[**Naik/Turun**]: Provinsi dengan angka tertinggi migrasi naik/turun di tahun berjalan 
+            - :orange[**Migrasi Provinsi**]: Jumlah persen % Migrasi yang melebihi 50.000 penduduk
             ''')
