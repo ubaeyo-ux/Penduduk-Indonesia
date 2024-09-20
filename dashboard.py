@@ -95,9 +95,8 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
             locations=df["Column"],  # Spatial coordinates
             featureidkey="properties.Propinsi",
             z=df["Columnnext"],  # Data to be color-coded
-            color=input_color_theme,
-            range_color=(0, max(df_selected_year.population)),
-            labels={'population':'Jumlah'}
+            colorscale=input_color_theme,
+            colorbar_title='Jumlah',
         )
     )
     choropleth_map.update_geos(fitbounds="locations", visible=False)
