@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 #######################
 # Page configuration
 st.set_page_config(
-    page_title="Jumlah Penduduk Indonesia",
+    page_title="Jumlah Penduduk Indonesia DIBUAT OLEH SULTAN",
     page_icon="✅",
     layout="wide",
     initial_sidebar_state="expanded")
