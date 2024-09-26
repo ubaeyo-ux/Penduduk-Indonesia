@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 #######################
 # Page configuration
 st.set_page_config(
-    page_title="Jumlah Penduduk Indonesia DIBUAT OLEH SULTAN",
+    page_title="Jumlah Penduduk Indonesia",
     page_icon="✅",
     layout="wide",
     initial_sidebar_state="expanded")
@@ -26,7 +26,7 @@ df_reshaped = pd.read_csv('penduduk-indonesia-2018-2023.csv')
 #######################
 # Sidebar
 with st.sidebar:
-    st.title('🌞 Data Penduduk')
+    st.title('🌞 Data Penduduk - DIBUAT OLEH SULTAN')
     
     year_list = list(df_reshaped.year.unique())[::-1]
     
